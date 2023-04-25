@@ -13,16 +13,16 @@ const CopyPlugin = require('copy-webpack-plugin');
 const paths = require('react-scripts/config/paths');
 const webpack = require('webpack');
 const webpackObfuscator = require('webpack-obfuscator');
+const packageConfigJSON = require('./package-config.json');
+const { version, buildPath, homepage} = packageConfigJSON;
 
-const version='v1.0'
-
-
+const configPath = `./src/configs/config.js`
 paths.appBuild = path.join(
   path.dirname(paths.appBuild),
-  `build/`
+  `build/${buildPath}`
 );
 
-paths.publicUrlOrPath = '/';
+paths.publicUrlOrPath =homepage;
 const configResult = override(
     fixBabelImports("import", {
         libraryName: "antd",
@@ -30,8 +30,16 @@ const configResult = override(
         style: true, //自动打包相关的样式 默认为 style:css
         }),
 
-
- 
+        addWebpackPlugin(
+          new CopyPlugin({
+            patterns: [
+              {
+                from: configPath,
+                to: `${version}/config.js`,
+              },
+            ],
+          })
+        ),
   (config) => {
     const isEnvDevelopment = config.mode === 'development';
     const isEnvProduction = config.mode === 'production';

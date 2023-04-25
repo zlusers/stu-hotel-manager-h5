@@ -35,7 +35,6 @@ const errorHandler = (error: AxiosError) => {
     const { status } = response;
     const { url } = config;
     message.error( `${errorText ? errorText : '请求错误'} ${status}: ${url}`, );
-   
   }
 
   if (!response) {

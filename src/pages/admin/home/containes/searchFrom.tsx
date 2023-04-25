@@ -6,9 +6,12 @@ import { PayType } from 'src/utils/utils';
  * 
  * @returns  左边卡片
  */
-const searchFrom: React.FC = () => {
+interface Props {
+    onOk: (ret:any) => void;
+  }
+const searchFrom: React.FC<Props> = ({onOk}) => {
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
+        onOk(values)
     };
     return (
         <Form
@@ -19,10 +22,10 @@ const searchFrom: React.FC = () => {
             onFinish={onFinish}
         >    <Row>
             <Col span={12}>
-                <Form.Item name="phone"
+                <Form.Item name="type"
                     label="支付类型">
-                    <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} defaultValue=''>
-                        <Select.Option value="">全部</Select.Option>
+                    <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} defaultValue='4'>
+                        <Select.Option value="4">全部</Select.Option>
                         {Object.keys(PayType).map((item:string) => (
                         <Select.Option value={item} key={item}>
                             {PayType[item]}

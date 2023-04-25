@@ -1,68 +1,45 @@
-import React, { useCallback, useState } from 'react';
-import { Modal, Table } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Modal, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PayMethod } from 'src/utils/utils';
+import { getDateStr, getPayType } from 'src/utils/display';
+import { queryUpdateOffRes } from 'src/services/apis';
 /**
  * 
  * @returns  左边卡片
  */
-interface DataType {
-    key: React.Key;
-    zffs: string;
-    pmsddh: string;
-    crsddh: string;
-    rzsj:string;
-    rzrxm:string;
-    zfje:number;
-    rzdate:string;
-    ldsj:string;
-    bz:string;
-    cyje:number;
-    
-  }
 
-const TableList= () => {
-    const [selectObj,setSelectObj]=useState<DataType[]>([])
-    const data: DataType[] = [];
-    for (let i = 0; i < 100; i++) {
-      data.push({
-        key: `${i%14+1}`,
-        zffs: `${i%14+1}`,
-        pmsddh: `20998376365535${i}`,
-        crsddh: `20998376365535${i}`,
-        rzsj:'2022-09-09',
-        rzrxm:`张伞${i}`,
-        zfje:i*23,
-        rzdate:'2022-09-09',
-        ldsj:'2022-09-09',
-        bz:`London Park no. ${i}`,
-        cyje:i,
-      });
-    }
+interface Props {
+    dataList:any[] |undefined
+    payTypedata:API.PayWay[]| null
+}
+const TableList: React.FC<Props> = ({dataList,payTypedata}) => {
+    const [selectObj,setSelectObj]=useState<any[]>([])
+  
     const onCancel=useCallback((e:any)=>{
-        Modal.confirm({
-            title: `撤销`,
-            content: `确定要撤销核销吗？`,
-            onOk() {
-              console.log('撤销')
-            },
-          });
+        queryUpdateOffRes({posStatus:2}).then((res)=>{
+            if(res.status===200){
+                message.success(res?.data)
+              }else {
+                message.error(res?.message)
+              }
+        })
     },[])
-    const columns: ColumnsType<DataType>  = [
+    const columns: ColumnsType<any>  = [
         {
             title: '支付方式',
-            dataIndex: 'zffs',
-            key: 'zffs',
+            dataIndex: 'pPayWay',
+            key: 'pPayWay',
             width: 80,
             align:"center",
             ellipsis:true,
             fixed:'left',
-            render: (text) => PayMethod[text],
+            render: (text) => <div>{getPayType(payTypedata,text)}</div>,
         },
         {
             title: 'PMS订单号',
-            dataIndex: 'pmsddh',
-            key: 'pmsddh',
+            dataIndex: 'pPmsNum',
+            key: 'pPmsNum',
             width: 80,
             align:"center",
             fixed:'left',
@@ -70,8 +47,8 @@ const TableList= () => {
         },
         {
             title: 'CRS订单号',
-            dataIndex: 'crsddh',
-            key: 'crsddh',
+            dataIndex: 'pCrsNum',
+            key: 'pCrsNum',
             width: 80,
             align:"center",
             fixed:'left',
@@ -83,48 +60,51 @@ const TableList= () => {
               
                 {
                     title: '入账时间',
-                    dataIndex: 'rzsj',
-                    key: 'rzsj',
+                    dataIndex: 'pInCoinTime',
+                    key: 'rzpInCoinTimesj',
                     width: 80,
                     align:"center",
                     ellipsis:true,
+                    render: (text) => <div>{getDateStr(text)}</div>,
                 },
                 {
                     title: '入住人姓名',
-                    dataIndex: 'rzrxm',
-                    key: 'rzrxm',
+                    dataIndex: 'pCheckinName',
+                    key: 'pCheckinName',
                     width: 80,
                     align:"center",
                     ellipsis:true,
                 },
                 {
                     title: '支付金额',
-                    dataIndex: 'zfje',
-                    key: 'zfje',
+                    dataIndex: 'pPaymoney',
+                    key: 'pPaymoney',
                     width: 60,
                     align:'center',
                     ellipsis:true,
                 },
                 {
                     title: '入住时间',
-                    dataIndex: 'rzdate',
-                    key: 'rzdate',
+                    dataIndex: 'pCheckinTime',
+                    key: 'pCheckinTime',
                     width: 80,
                     align:"center",
                     ellipsis:true,
+                    render: (text) => <div>{getDateStr(text)}</div>,
                 },
                 {
                     title: '离店时间',
-                    dataIndex: 'ldsj',
-                    key: 'ldsj',
+                    dataIndex: 'pCheckOutTime',
+                    key: 'pCheckOutTime',
                     width: 80,
                     align:"center",
                     ellipsis:true,
+                    render: (text) => <div>{getDateStr(text)}</div>,
                 },
                 {
                     title: '备注',
-                    dataIndex: 'bz',
-                    key: 'bz',
+                    dataIndex: 'memo',
+                    key: 'memo',
                     width: 80,
                     align:"center",
                     ellipsis:true,
@@ -136,67 +116,69 @@ const TableList= () => {
             children: [
                 {
                     title: '支付方式',
-                    dataIndex: 'zffs',
-                    key: 'zffs',
+                    dataIndex: 'bPayWay',
+                    key: 'bPayWay',
                     width: 60,
                     align:"center",
                     ellipsis:true,
-                    render: (text) => <div>{PayMethod[text]}</div>,
+                    render: (text) => <div>{getPayType(payTypedata,text)}</div>,
                 },
                 {
                     title: 'PMS订单号',
-                    dataIndex: 'pmsddh',
-                    key: 'pmsddh',
+                    dataIndex: 'bPmsNum',
+                    key: 'bPmsNum',
                     width: 80,
                     align:"center",
                     ellipsis:true,
                 },
                 {
                     title: 'CRS订单号',
-                    dataIndex: 'crsddh',
-                    key: 'crsddh',
+                    dataIndex: 'bCrsNum',
+                    key: 'bCrsNum',
                     width: 80,
                     align:"center",
                     ellipsis:true,
                 },
                 {
                     title: '入住人姓名',
-                    dataIndex: 'rzrxm',
-                    key: 'rzrxm',
+                    dataIndex: 'bCheckinName',
+                    key: 'bCheckinName',
                     width: 80,
                     align:"center",
                     ellipsis:true,
                 },
                 {
                     title: '支付金额',
-                    dataIndex: 'zfje',
-                    key: 'zfje',
+                    dataIndex: 'bPaymoney',
+                    key: 'bPaymoney',
                     width: 60,
                     align:'center',
                     ellipsis:true,
                 },
                 {
                     title: '入住时间',
-                    dataIndex: 'rzdate',
-                    key: 'rzdate',
+                    dataIndex: 'bCheckinTime',
+                    key: 'bCheckinTime',
                     width: 80,
                     align:"center",
                     ellipsis:true,
+                    render: (text) => <div>{getDateStr(text)}</div>,
                 },
                 {
                     title: '离店时间',
-                    dataIndex: 'ldsj',
-                    key: 'ldsj',
+                    dataIndex: 'bCheckOutTime',
+                    key: 'bCheckOutTime',
                     width: 80,
                     align:"center",
                     ellipsis:true,
+                    render: (text) => <div>{getDateStr(text)}</div>,
                 }, 
             ]
         },
         {
             title: '差异金额',
-            dataIndex: 'cyje',
-            key: 'cyje',
+            dataIndex: 'varianceAmount',
+            key: 'varianceAmount',
             width: 80,
             align:"center",
             fixed:'right',
@@ -209,43 +191,75 @@ const TableList= () => {
             align:"center",
             fixed:'right',
             ellipsis:true,
-            render:(record: DataType) => (
-                <div onClick={(record)=>onCancel(record)} style={{color:"red"}}>撤销核销</div>
+            render:(record: any) => (
+                record?.varianceAmount===0?'正常账单':
+                record?.posStatus===1?
+                <div onClick={(record)=>onCancel(record)} style={{color:"red"}}>撤销核销</div>:<div>未核销</div>
+
             )
     
         }
     ];
     const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+        onChange: (selectedRowKeys: React.Key[], selectedRows:any[]) => {
           console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           setSelectObj(selectedRows)
         },
-        getCheckboxProps: (record: DataType) => ({
-          disabled: record.zffs === '3', // Column configuration not to be checked
-          name: record.zffs,
+        getCheckboxProps: (record: any) => ({
+          disabled: record.posStatus === 1, // Column configuration not to be checked
+          name: record.posStatus,
         }),
       };
+    const seData=useMemo(()=>{
+        let bPaymoneyAll = 0;
+        let pPaymoneyAll = 0;
+        if(selectObj&&selectObj.length>0){
+            selectObj.forEach(({bPaymoney, pPaymoney }) => {
+                bPaymoneyAll += Number(bPaymoney);
+                pPaymoneyAll += Number(pPaymoney);
+            });
+            return {
+                bPaymoneyAll,pPaymoneyAll
+            }
+        }
+        return {
+            bPaymoneyAll,pPaymoneyAll
+        }
 
+    },[selectObj])
+   
+    const dataMemo=useMemo(()=>{
+        let bPaymoneyAll = 0;
+        let pPaymoneyAll = 0;
+        let varianceAmountAll = 0;
+        if(dataList&&dataList.length>0){
+            dataList.forEach(({bPaymoney, pPaymoney,varianceAmount }) => {
+                bPaymoneyAll += Number(bPaymoney);
+                pPaymoneyAll += Number(pPaymoney);
+                varianceAmountAll += Number(varianceAmount);
+            });
+            return {
+                bPaymoneyAll,pPaymoneyAll,varianceAmountAll
+            }
+        }
+        return {
+            bPaymoneyAll,pPaymoneyAll,varianceAmountAll
+        }
+
+    },[dataList])
     return (
         <div>
             {
             selectObj&&selectObj.length>0&& (<div style={{height:'25px',lineHeight:'25px',fontSize:'16px'}}>
-            合计：PMS支付金额：222，对账单支付金额：123
+            合计：PMS支付金额：{seData?.pPaymoneyAll}，对账单支付金额：{seData?.bPaymoneyAll}
               </div>)}
-             <Table dataSource={data} columns={columns} bordered  size={'middle'}  rowSelection={{
+             <Table dataSource={dataList} columns={columns} bordered  size={'middle'}  rowSelection={{
           type: 'checkbox',
           hideSelectAll:true,
           fixed:"left",
           ...rowSelection,
         }}  scroll={{ x: '2000px',}}
-        summary={(pageData) => {
-            let totalBorrow = 0;
-            let totalRepayment = 0;
-
-            pageData.forEach(({ zfje, cyje }) => {
-                totalBorrow += zfje;
-                totalRepayment += cyje;
-            });
+        summary={() => {
             return (
                 <Table.Summary fixed>
                     <Table.Summary.Row>
@@ -255,7 +269,7 @@ const TableList= () => {
                         <Table.Summary.Cell index={3}></Table.Summary.Cell>
                         <Table.Summary.Cell index={4}></Table.Summary.Cell>
                         <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={6} align={'center'}>{totalRepayment}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={6} align={'center'}>{dataMemo?.pPaymoneyAll}</Table.Summary.Cell>
                         <Table.Summary.Cell index={7}></Table.Summary.Cell>
                         <Table.Summary.Cell index={8}></Table.Summary.Cell>
                         <Table.Summary.Cell index={9}></Table.Summary.Cell>
@@ -263,10 +277,10 @@ const TableList= () => {
                         <Table.Summary.Cell index={11}></Table.Summary.Cell>
                         <Table.Summary.Cell index={12}></Table.Summary.Cell>
                         <Table.Summary.Cell index={13}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={14} align={'center'}>{totalRepayment}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={14} align={'center'}>{dataMemo?.bPaymoneyAll}</Table.Summary.Cell>
                         <Table.Summary.Cell index={15}></Table.Summary.Cell>
                         <Table.Summary.Cell index={16}></Table.Summary.Cell>
-                        <Table.Summary.Cell align={'center'} index={17}>{totalBorrow}</Table.Summary.Cell>
+                        <Table.Summary.Cell align={'center'} index={17}>{dataMemo?.varianceAmountAll}</Table.Summary.Cell>
                         <Table.Summary.Cell index={18}></Table.Summary.Cell>
                     </Table.Summary.Row>
                 </Table.Summary>

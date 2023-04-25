@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
 
-import { PayMethod, PayType,HxType,jgType, monthFormat } from 'src/utils/utils';
-import { getDate } from 'src/utils/display';
+import { PayType,HxType,jgType, monthFormat } from 'src/utils/utils';
+import { getDate1 } from 'src/utils/display';
 /**
  * 
  * @returns  
@@ -23,12 +23,19 @@ const tailLayout = {
 
 };
 interface Props {
-    outClick?:()=>void
+    payTypedata:API.PayWay[]|null;
+    outClick:()=>void
     exportClick?:()=>void
+    onSearch:(data:API.Isearch)=>void
 }
-const SearchFrom: React.FC<Props> = ({outClick,exportClick}) => {
+const SearchFrom: React.FC<Props> = ({outClick,exportClick,payTypedata,onSearch}) => {
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
+        const createTime = values['createTime'];
+        const rangeTime = values['rangeTime'];
+        let parDate =values
+        parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
+        parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
+        onSearch(parDate)
     };
    
 
@@ -40,15 +47,16 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick}) => {
             wrapperCol={{ span: 12 }}
             layout="horizontal"
             initialValues={{
-                zflx:'',
-                zffs:'',
-                ssqj:dayjs(getDate(), monthFormat),
-                hx:''
+                payWay:'',
+                type:'',
+                rangeTime:dayjs(getDate1(), monthFormat), 
+                status:'',
+                poStatus:''
             }}
         >
             <Row gutter={24}>
                 <Col span={8}>
-                    <Form.Item name="zflx" label="支付类型" {...tailLayout}>
+                    <Form.Item name="type" label="支付类型" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             {Object.keys(PayType).map((item: string) => (
@@ -60,26 +68,26 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick}) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name="zffs" label="支付方式" {...tailLayout}>
+                    <Form.Item name="payWay" label="支付方式" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
-                            {Object.keys(PayMethod).map((item: string) => (
-                                <Select.Option value={item} key={item}>
-                                    {PayMethod[item]}
+                            {payTypedata?.map((item:API.PayWay) => (
+                                <Select.Option value={item.id} key={item.id}>
+                                    {item.payWay}
                                 </Select.Option>
                             ))}
                         </Select>
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name="czrq" label="操作日期"  {...tailLayout}>
+                    <Form.Item name="createTime" label="操作日期"  {...tailLayout}>
                         <DatePicker />
                     </Form.Item>
                 </Col>
             </Row>
             <Row gutter={24}>
             <Col span={8}>
-                <Form.Item name="hx" label="结果状态" {...tailLayout}>
+                <Form.Item name="status" label="结果状态" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             {Object.keys(jgType).map((item: string) => (
@@ -92,7 +100,7 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick}) => {
                 </Col>
                 
                 <Col span={8}>
-                <Form.Item name="hx" label="核销状态" {...tailLayout}>
+                <Form.Item name="poStatus" label="核销状态" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             {Object.keys(HxType).map((item: string) => (
@@ -104,7 +112,7 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick}) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name="ssqj" label="所属区间"  {...tailLayout}>
+                    <Form.Item name="rangeTime" label="所属区间"  {...tailLayout}>
                         <DatePicker  picker="month"/>
                     </Form.Item>
                 </Col>

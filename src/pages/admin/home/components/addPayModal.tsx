@@ -10,7 +10,7 @@ import {Form, Input, Modal} from 'antd';
 interface ModalProps {
     visible: boolean;
     onCancel: () => void;
-    onOk: () => void;
+    onOk: (data:string) => void;
 }
 const AddPayMadal: React.FC<ModalProps> = ({
     visible, onCancel, onOk
@@ -21,8 +21,9 @@ const AddPayMadal: React.FC<ModalProps> = ({
         form.validateFields()
         .then((values) => {
             console.log(values,'===values')
+            onOk(values?.payWay)
         })
-    },[form])
+    },[form,onOk])
         
     
     const layout = {
@@ -51,7 +52,7 @@ const AddPayMadal: React.FC<ModalProps> = ({
                         preserve={false} 
                     >
 
-                        <Form.Item name="note" label="支付方式" rules={[{ required: true }]}>
+                        <Form.Item name="payWay" label="支付方式" rules={[{ required: true }]}>
                             <Input />
                         </Form.Item>
 

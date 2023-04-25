@@ -1,61 +1,61 @@
-import React from 'react';
+import React, { useCallback,useState } from 'react';
 import cls from './table.module.scss';
 import {Table } from 'antd';
 import SearchFrom from './searchFrom';
+import UsePaywary from 'src/hook/usePaywary';
+import {useQuerygetPayTypeList} from 'src/services/apis';
 /**
  * 
  * @returns  左边卡片
  */
-const table: React.FC = () => {
-    const dataSource = [
-        {
-            key: '1',
-            name: '微信',
-            age: 32,
-            address: 12,
-        },
-        {
-            key: '2',
-            name: '支付宝',
-            age: 42,
-            address: 87,
-        },
-    ];
+const TableView = () => {
+    const {data} =UsePaywary()
+    const [type,setType]=useState(4)
+    const {data:homeData}=useQuerygetPayTypeList({type:Number(type)})
 
+    const getPayType=(id:number)=>{
+        if(data){
+            return  data.filter((item)=>item?.id===id)[0]?.payWay
+        }
+        return id
+    }
     const columns = [
         {
             title: '支付方式',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'payWay',
+            key: 'payWay',
             width: 30,
+            render: (text:number) => <div>{getPayType(text)}</div>,
         },
         {
             title: '欠离金额',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'underseparationMoney',
+            key: 'underseparationMoney',
             width: 30,
         },
         {
             title: '差异金额',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'varianceMoney',
+            key: 'varianceMoney',
             width: 30,
         },
     ];
 
-
+const onSearch=useCallback((values:any)=>{
+ setType(values?.type)
+},[])
     return (
         <div className={cls.page}>
-            <SearchFrom />
+            <SearchFrom  onOk={(values)=>onSearch(values)} />
             <div className={cls.tableView}>
-                <Table dataSource={dataSource} columns={columns} pagination={false}
+                <Table dataSource={homeData} columns={columns} pagination={false}
                     summary={(pageData) => {
                         let totalBorrow = 0;
                         let totalRepayment = 0;
 
-                        pageData.forEach(({ age, address }) => {
-                            totalBorrow += address;
-                            totalRepayment += age;
+                        pageData.forEach(({ underseparationMoney, varianceMoney }) => {
+                            totalBorrow += varianceMoney;
+                            totalRepayment += underseparationMoney;
                         });
                         return (
                             <Table.Summary fixed>
@@ -76,4 +76,4 @@ const table: React.FC = () => {
     )
 }
 
-export default table; 
+export default TableView; 

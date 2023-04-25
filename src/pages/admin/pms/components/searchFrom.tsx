@@ -3,8 +3,9 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
-import { monthFormat, PayMethod, PayType } from 'src/utils/utils';
-import { getDate } from 'src/utils/display';
+import { monthFormat, PayType } from 'src/utils/utils';
+import { getDate1 } from 'src/utils/display';
+
 /**
  * 
  * @returns  左边卡片
@@ -23,11 +24,21 @@ const tailLayout = {
 
 };
 interface Props {
+    data?:API.Search;
     onAdd: () => void;
+    payTypedata:API.PayWay[]|null;
+    onSearch:(data:API.Search) => void;
 }
-const SearchFrom: React.FC<Props> = ({onAdd}) => {
+const SearchFrom: React.FC<Props> = ({onAdd,payTypedata,onSearch}) => {
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
+        const createTime = values['createTime'];
+        const rangeTime = values['rangeTime'];
+        let parDate =values
+        parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
+        parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
+        console.log('parDate: ',parDate);
+        onSearch(parDate)
     };
     return (
         <Form
@@ -37,14 +48,14 @@ const SearchFrom: React.FC<Props> = ({onAdd}) => {
             wrapperCol={{ span: 12 }}
             layout="horizontal"
             initialValues={{
-                zflx:'',
-                zffs:'',
-                ssqj:dayjs(getDate(), monthFormat)
+                payWay:'',
+                type:'',
+                rangeTime:dayjs(getDate1(), monthFormat), 
             }}
         >
             <Row gutter={24}>
                 <Col span={8}>
-                    <Form.Item name="zflx" label="支付类型" {...tailLayout}>
+                    <Form.Item name="payWay" label="支付类型" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             {Object.keys(PayType).map((item: string) => (
@@ -56,27 +67,27 @@ const SearchFrom: React.FC<Props> = ({onAdd}) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name="zffs" label="支付方式" {...tailLayout}>
+                    <Form.Item name="type" label="支付方式" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
-                            {Object.keys(PayMethod).map((item: string) => (
-                                <Select.Option value={item} key={item}>
-                                    {PayMethod[item]}
+                            {payTypedata?.map((item:API.PayWay) => (
+                                <Select.Option value={item.id} key={item.id}>
+                                    {item.payWay}
                                 </Select.Option>
                             ))}
                         </Select>
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name="czrq" label="操作日期"  {...tailLayout}>
-                        <DatePicker />
+                    <Form.Item name="createTime" label="操作日期"  {...tailLayout}>
+                        <DatePicker format={'YYYY-MM-DD'}/>
                     </Form.Item>
                 </Col>
             </Row>
             <Row gutter={24}>
                 <Col span={8}>
-                    <Form.Item name="ssqj" label="所属区间"  {...tailLayout}>
-                        <DatePicker picker="month"/>
+                    <Form.Item name="rangeTime" label="所属区间"  {...tailLayout}>
+                        <DatePicker picker="month" format={'YYYY-MM'}/>
                     </Form.Item>
                 </Col>
 
@@ -90,7 +101,7 @@ const SearchFrom: React.FC<Props> = ({onAdd}) => {
                         style={{ margin: '0 8px' }}
                         onClick={onAdd}
                     >
-                        上传文件
+                      上传文件
                     </Button>
                 </Col>
             </Row>

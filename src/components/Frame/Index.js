@@ -10,9 +10,6 @@ const { Header, Content, Sider } = Layout;
 const routes = adminRoutes.filter(route => route.isShow)
 
 function Index(props) {
-
-
-
   return (
     <Layout>
       <Header className="header" style={{

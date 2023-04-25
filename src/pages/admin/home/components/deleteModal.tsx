@@ -7,7 +7,7 @@ import {DatePicker, Form, Modal, Select } from 'antd';
 interface ModalProps {
     visible: boolean;
     onCancel: () => void;
-    onOk: () => void;
+    onOk: (data:any) => void;
   }
 const DeleteMadal: React.FC<ModalProps> = ({
     visible, onCancel, onOk 
@@ -17,8 +17,15 @@ const DeleteMadal: React.FC<ModalProps> = ({
         form.validateFields()
         .then((values) => {
             console.log(values,'===values')
+            const createTime = values['createTime'];
+            const rangeTime = values['rangeTime'];
+            let parDate =values
+            parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
+            parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
+            console.log('parDate: ',parDate);
+            onOk(parDate)
         })
-    },[form])
+    },[form,onOk])
     const layout = {
         labelCol: { span: 6 },
         wrapperCol: { span: 12 },
@@ -45,17 +52,17 @@ const DeleteMadal: React.FC<ModalProps> = ({
                         preserve={false} 
                     >
 
-                        <Form.Item name="note" label="操作日期" rules={[{ required: true }]}>
+                        <Form.Item name="createTime" label="操作日期" rules={[{ required: true }]}>
                           <DatePicker />
                         </Form.Item>
-                        <Form.Item name="note1" label="所属区间" rules={[{ required: true }]}>
+                        <Form.Item name="rangeTime" label="所属区间" rules={[{ required: true }]}>
                           <DatePicker picker="month" />
                         </Form.Item>
-                        <Form.Item name="zffs" label="报表类型" >
+                        <Form.Item name="pmsOrBill" label="报表类型" >
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             <Select.Option value={'1'} key={'pms'}>Pms</Select.Option>
-                            <Select.Option value={'2'} key={'dzd'}>对账单</Select.Option>
+                            <Select.Option value={'2'} key={'对账单'}>对账单</Select.Option>
                         </Select>
                     </Form.Item>
 

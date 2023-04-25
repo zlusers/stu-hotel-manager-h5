@@ -6,6 +6,8 @@ import { adminRoutes } from './routes'
 import Frame from './components/Frame/Index';
 import './App.css'
 function App() {
+  
+  
   return (
     <Frame className="App">
       <Switch>

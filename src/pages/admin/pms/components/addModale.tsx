@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { DatePicker, Form,  Modal, Select} from 'antd';
-import { monthFormat, PayMethod, PayType } from 'src/utils/utils';
+import { DatePicker, Form,  Modal, Select, message} from 'antd';
+import { monthFormat, PayType } from 'src/utils/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
@@ -9,7 +9,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import Upload from 'src/components/Upload'
 import cls from './addModale.module.scss'
-import { getDate } from 'src/utils/display';
+import { getDate1 } from 'src/utils/display';
+import moment from 'moment';
 
 /**
  * 
@@ -19,22 +20,30 @@ dayjs.extend(customParseFormat);
 interface ModalProps {
     visible: boolean;
     onCancel: () => void;
-    onOk: () => void;
+    onOk: (data:API.Upload) => void;
+    payTypedata:API.PayWay[]|null
 }
 const AddMadal: React.FC<ModalProps> = ({
-    visible, onCancel, onOk
+    visible, onCancel, onOk,payTypedata
 }) => {
     const [fileList, setFileList] = useState<any[]>([]);
-  
+    
 
     const [form] = Form.useForm();
     const onFinish = useCallback(() => {
-        console.log(fileList,'===fileList')
         form.validateFields()
             .then((values) => {
-                console.log(values, '===values')
+                let data =values
+                data.rangeTime=data.rangeTime?moment(data.rangeTime).format("YYYYMM"):''
+                if(fileList&&fileList.length>0){
+                    data.fileName=fileList.join(';');
+                    onOk(data)
+                }else {
+                    message.error( '清选择文件');
+                }
+
             })
-    }, [form,fileList])
+    }, [form,fileList,onOk])
 
     const layout = {
         labelCol: { span: 6 },
@@ -57,7 +66,7 @@ const AddMadal: React.FC<ModalProps> = ({
         setFileList(list)
     },[fileList])
   
-   
+ 
     return (
         <>
             <Modal
@@ -76,11 +85,14 @@ const AddMadal: React.FC<ModalProps> = ({
                         style={{ maxWidth: 600 }}
                         preserve={false}
                         initialValues={{
-
+                            fileName : "",    // 多个上传以 ; 隔开 
+                            type : '',
+                            payWay : '',
+                            rangeTime:dayjs(getDate1(), monthFormat), 
                         }}
                     >
 
-                        <Form.Item name="phone" label="支付类型" rules={[{ required: true,message:'请选择支付类型' }]}>
+                        <Form.Item name="type" label="支付类型" rules={[{ required: true,message:'请选择支付类型' }]}>
                             <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} >
                                 {Object.keys(PayType).map((item: string) => (
                                     <Select.Option value={item} key={item}>
@@ -89,18 +101,18 @@ const AddMadal: React.FC<ModalProps> = ({
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item name="zffs" label="支付方式"  rules={[{ required: true,message:'请选择支付方式'  }]}>
+                        <Form.Item name="payWay" label="支付方式"  rules={[{ required: true,message:'请选择支付方式'  }]}>
                             <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} defaultValue=''>
                                 <Select.Option value="">全部</Select.Option>
-                                {Object.keys(PayMethod).map((item: string) => (
-                                    <Select.Option value={item} key={item}>
-                                        {PayMethod[item]}
-                                    </Select.Option>
-                                ))}
+                                {payTypedata?.map((item:API.PayWay) => (
+                                <Select.Option value={item.id} key={item.id}>
+                                    {item.payWay}
+                                </Select.Option>
+                               ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item name="ssqj" label="所属区间"  rules={[{ required: true,message:'请选择所属区间'  }]}>
-                           <DatePicker defaultValue={dayjs(getDate(), monthFormat)} format={monthFormat} picker="month" />
+                        <Form.Item name="rangeTime" label="所属区间"  rules={[{ required: true,message:'请选择所属区间'  }]}>
+                           <DatePicker picker="month"  format={'YYYY-MM'}/>
                        </Form.Item>
                         <Form.Item  label="选择文件" >
                             <Upload fileinputChange={(event:any)=>fileinputChange(event)}/>

@@ -31,6 +31,6 @@ export const PayType: { [key: string]: string }  = {
     '2': '差异',
 
   };
-  export const monthFormat = 'YYYY/MM';
+  export const monthFormat = 'YYYY-MM';
 
 
