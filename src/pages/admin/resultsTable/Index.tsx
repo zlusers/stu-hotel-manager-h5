@@ -34,8 +34,6 @@ const Index: React.FC = () => {
     useEffect(()=>{
       getList()
     },[getList])
-   
-   
     const onSearch=useCallback((data:API.Isearch)=>{
         setSearchData(data)
     },[])
@@ -64,7 +62,7 @@ const Index: React.FC = () => {
      });
         queryUpdateOffRes({poStatus:2,bids:bids,pids:pids}).then((res)=>{
             if(res.status===200){
-                message.success(res?.data)
+                message.success('核销成功')
                 getList()
               }else {
                 message.error(res?.message)
@@ -78,7 +76,7 @@ const Index: React.FC = () => {
       let pids =[e.pId] ;
       queryUpdateOffRes({poStatus:2,bids:bids,pids:pids}).then((res)=>{
           if(res.status===200){
-              message.success(res?.data)
+              message.success('撤销核销成功')
               getList()
             }else {
               message.error(res?.message)
