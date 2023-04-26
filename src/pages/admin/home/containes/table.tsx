@@ -1,4 +1,4 @@
-import React, { useCallback,useState } from 'react';
+import React, { useCallback,useMemo,useState } from 'react';
 import cls from './table.module.scss';
 import {Table } from 'antd';
 import SearchFrom from './searchFrom';
@@ -12,6 +12,23 @@ const TableView = () => {
     const {data} =UsePaywary()
     const [type,setType]=useState(4)
     const {data:homeData}=useQuerygetPayTypeList({type:Number(type)})
+   
+    const  dataListMemo =useMemo(()=>{
+        let data=homeData
+        if(data&&data.length>0){
+            let list=data.map((item,index)=>{
+                return {
+                    ...item,
+                    key:index+1
+                }
+            })
+            return list.filter((item)=>{
+                return item.underseparationMoney !==0 ||item.varianceMoney!==0
+            })
+        }
+        return []
+
+    },[homeData])
 
     const getPayType=(id:number)=>{
         if(data){
@@ -48,7 +65,7 @@ const onSearch=useCallback((values:any)=>{
         <div className={cls.page}>
             <SearchFrom  onOk={(values)=>onSearch(values)} />
             <div className={cls.tableView}>
-                <Table dataSource={homeData} columns={columns} pagination={false}
+                <Table dataSource={dataListMemo} columns={columns}
                     summary={(pageData) => {
                         let totalBorrow = 0;
                         let totalRepayment = 0;

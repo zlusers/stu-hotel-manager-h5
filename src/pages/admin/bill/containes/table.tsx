@@ -13,7 +13,18 @@ interface Props {
     payTypedata:API.PayWay[]| null
 }
 const PmSTable: React.FC<Props> = ({PmsData,payTypedata}) => {
+    const  dataListMemo =useMemo(()=>{
+        if(PmsData&&PmsData.length>0){
+            return PmsData.map((item,index)=>{
+                return {
+                    ...item,
+                    key:index+1
+                }
+            })
+        }
+        return []
 
+    },[PmsData])
    
     const columns: ColumnsType<API.BillItem>  = [
         {
@@ -89,7 +100,7 @@ const PmSTable: React.FC<Props> = ({PmsData,payTypedata}) => {
     },[PmsData])
     return (
         <div>
-             <Table dataSource={PmsData} columns={columns}  size={'middle'}
+             <Table dataSource={dataListMemo} columns={columns}  size={'middle'}
               summary={() => {
                 
                 return (

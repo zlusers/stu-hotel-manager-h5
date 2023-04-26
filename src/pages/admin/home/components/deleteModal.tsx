@@ -61,8 +61,8 @@ const DeleteMadal: React.FC<ModalProps> = ({
                         <Form.Item name="pmsOrBill" label="报表类型" >
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
-                            <Select.Option value={'1'} key={'pms'}>Pms</Select.Option>
-                            <Select.Option value={'2'} key={'对账单'}>对账单</Select.Option>
+                            <Select.Option value={'Pms'} key={'Pms'}>Pms</Select.Option>
+                            <Select.Option value={'对账单'} key={'对账单'}>对账单</Select.Option>
                         </Select>
                     </Form.Item>
 

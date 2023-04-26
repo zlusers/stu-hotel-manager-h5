@@ -64,11 +64,10 @@ export async function queryNewPayWay({payWay}:{payWay:string}): Promise<any> {
 export async function queryRemoveList({rangeTime,createTime,pmsOrBill}:{rangeTime:string,createTime:string,pmsOrBill:string}): Promise<any> {
   return request.post(urls.removeList, {rangeTime,createTime,pmsOrBill})
   .then(defaultResultParse)
-  .then((res)=>{return res?.data});
+  .then((res)=>{return res});
 }
 
 // getPmsList
-
 export async function queryGetPmsList(parms: { payWay?:string,
   type?:string,
   rangeTime?:string,
@@ -77,32 +76,12 @@ export async function queryGetPmsList(parms: { payWay?:string,
   .then(defaultResultParse)
   .then((res)=>{return res.data || []});
 }
-
-export function useQueryGetPmsList({ 
-  payWay,
-  type,       // 1:中介  2：如家  3：华住
-  rangeTime,
-  createTime
- }: { payWay?:string,
-  type?:string,
-  rangeTime?:string,
-  createTime?:string,}) {
-  const swrResult = useSWR(
-    () => (['queryGetPmsList', payWay,type,rangeTime,createTime]),
-    () => queryGetPmsList({payWay,type,rangeTime,createTime})
-  );
-  return {
-    ...swrResult,
-    loading: !swrResult.data && !swrResult.error,
-  };
-}
 //pmsUpload 
 export async function queryPmsUpload(parms:API.Upload): Promise<any> {
   return request.post(urls.pmsUpload, parms)
   .then(defaultResultParse)
   .then((res)=>{return res});
 }
-
 // 对账单
 //pmsUpload 
 export async function querybillUpload(parms:API.Upload): Promise<any> {
@@ -118,24 +97,7 @@ export async function queryGetBillList(parms: { payWay?:string,
   .then(defaultResultParse)
   .then((res)=>{return res.data || []});
 }
-export function useQuerygetBillList({ 
-  payWay,
-  type,       // 1:中介  2：如家  3：华住
-  rangeTime,
-  createTime
- }: { payWay?:string,
-  type?:string,
-  rangeTime?:string,
-  createTime?:string,}) {
-  const swrResult = useSWR(
-    () => (['getBillList', payWay,type,rangeTime,createTime]),
-    () => queryGetBillList({payWay,type,rangeTime,createTime})
-  );
-  return {
-    ...swrResult,
-    loading: !swrResult.data && !swrResult.error,
-  };
-}
+
 // getBillResList
 export async function querygetBillResList(parms: { payWay?:string,
   type?:string,
@@ -173,7 +135,7 @@ export async function queryOutFile(parms: { payWay?:string,
   .then(defaultResultParse)
   .then((res)=>{return res});
 }
-export async function queryUpdateOffRes(parms: {posStatus:number }): Promise<any> {
+export async function queryUpdateOffRes(parms: {poStatus:number,bids:string[],pids:string[] }): Promise<any> {
   return request.post(urls.updateOffRes, parms)
   .then(defaultResultParse)
   .then((res)=>{return res});

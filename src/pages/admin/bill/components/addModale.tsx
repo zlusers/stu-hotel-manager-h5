@@ -10,7 +10,6 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Upload from 'src/components/Upload'
 import cls from './addModale.module.scss'
 import { getDate1 } from 'src/utils/display';
-import moment from 'moment';
 
 /**
  * 
@@ -56,8 +55,8 @@ const AddMadal: React.FC<ModalProps> = ({
     }, [visible, form])
     const fileinputChange=useCallback((e:any)=>{
         const list:string[]=[...fileList]
-        if(e.target.value){
-            list.push(e.target.value)
+        if(e.target?.files[0]?.name){
+            list.push(e.target.files[0].name)
             setFileList(list)
         }
     },[fileList])
@@ -104,7 +103,6 @@ const AddMadal: React.FC<ModalProps> = ({
                         </Form.Item>
                         <Form.Item name="payWay" label="支付方式"  rules={[{ required: true,message:'请选择支付方式'  }]}>
                             <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} defaultValue=''>
-                                <Select.Option value="">全部</Select.Option>
                                 {payTypedata?.map((item:API.PayWay) => (
                                 <Select.Option value={item.id} key={item.id}>
                                     {item.payWay}

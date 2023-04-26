@@ -1,9 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Modal, Table, message } from 'antd';
+import React, { useMemo, useState } from 'react';
+import {Table} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { PayMethod } from 'src/utils/utils';
 import { getDateStr, getPayType } from 'src/utils/display';
-import { queryUpdateOffRes } from 'src/services/apis';
 /**
  * 
  * @returns  左边卡片
@@ -12,19 +10,27 @@ import { queryUpdateOffRes } from 'src/services/apis';
 interface Props {
     dataList:any[] |undefined
     payTypedata:API.PayWay[]| null
+    onSeChange:(data:any[])=>void
+    onCancel:(data:any)=>void
 }
-const TableList: React.FC<Props> = ({dataList,payTypedata}) => {
+const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) => {
     const [selectObj,setSelectObj]=useState<any[]>([])
   
-    const onCancel=useCallback((e:any)=>{
-        queryUpdateOffRes({posStatus:2}).then((res)=>{
-            if(res.status===200){
-                message.success(res?.data)
-              }else {
-                message.error(res?.message)
-              }
-        })
-    },[])
+   
+
+    const  dataListMemo =useMemo(()=>{
+        if(dataList&&dataList.length>0){
+            return dataList.map((item,index)=>{
+                return {
+                    ...item,
+                    key:index+1
+                }
+
+            })
+        }
+        return []
+
+    },[dataList])
     const columns: ColumnsType<any>  = [
         {
             title: '支付方式',
@@ -194,7 +200,7 @@ const TableList: React.FC<Props> = ({dataList,payTypedata}) => {
             render:(record: any) => (
                 record?.varianceAmount===0?'正常账单':
                 record?.posStatus===1?
-                <div onClick={(record)=>onCancel(record)} style={{color:"red"}}>撤销核销</div>:<div>未核销</div>
+                <div onClick={(record:any)=>onCancel(record)} style={{color:"red"}}>撤销核销</div>:<div>未核销</div>
 
             )
     
@@ -204,6 +210,8 @@ const TableList: React.FC<Props> = ({dataList,payTypedata}) => {
         onChange: (selectedRowKeys: React.Key[], selectedRows:any[]) => {
           console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           setSelectObj(selectedRows)
+          onSeChange(selectedRows)
+
         },
         getCheckboxProps: (record: any) => ({
           disabled: record.posStatus === 1, // Column configuration not to be checked
@@ -253,7 +261,7 @@ const TableList: React.FC<Props> = ({dataList,payTypedata}) => {
             selectObj&&selectObj.length>0&& (<div style={{height:'25px',lineHeight:'25px',fontSize:'16px'}}>
             合计：PMS支付金额：{seData?.pPaymoneyAll}，对账单支付金额：{seData?.bPaymoneyAll}
               </div>)}
-             <Table dataSource={dataList} columns={columns} bordered  size={'middle'}  rowSelection={{
+             <Table dataSource={dataListMemo} columns={columns} bordered  size={'middle'}  rowSelection={{
           type: 'checkbox',
           hideSelectAll:true,
           fixed:"left",

@@ -1,10 +1,10 @@
 //rfce
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SearchFrom from './components/searchFrom';
 import Table from './containes/table';
 import AddMadal from './components/addModale';
 import TableTile from 'src/components/TableTile';
-import { querybillUpload, useQuerygetBillList } from 'src/services/apis';
+import { queryGetBillList, querybillUpload } from 'src/services/apis';
 import { getDate } from 'src/utils/display';
 import useAllPayWay from 'src/hook/usePaywary';
 import { message } from 'antd';
@@ -22,7 +22,18 @@ const Index =() => {
       rangeTime:getDate(),
       createTime:'',
     });
-    const {data:PsmData}=useQuerygetBillList(searchData)
+    const [PsmData,setPsmData]=useState<API.PmsItem[]>([])
+
+
+    const getList=useCallback(()=>{
+      queryGetBillList(searchData).then((res)=>{
+        setPsmData(res)
+      },)
+    },[searchData])
+    useEffect(()=>{
+      getList()
+    },[getList])
+   
     const openModal = () => {
       setIsVisible(true);
     };
@@ -38,14 +49,15 @@ const Index =() => {
     const onAddTable=useCallback((data:API.Upload)=>{
       querybillUpload(data).then((res)=>{
         if(res.status===200){
-          message.success('上传成功')
+          message.success(res.message)
+          getList()
           setIsVisible(false);
 
         }else {
-          message.error('上传失败')
+          message.error(res.message)
         }
       })
-    },[])
+    },[getList])
     return (
        <div>
         <SearchFrom onAdd={openModal} data={searchData} payTypedata={data} onSearch={onSearch}/>

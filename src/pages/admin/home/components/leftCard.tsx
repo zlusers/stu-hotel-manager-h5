@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import cls from './leftCard.module.scss';
 import logo from '../../../../images/home.png';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import AddPayMadal from './addPayModal';
 import DeleteMadal from './deleteModal';
 import { queryNewPayWay, queryRemoveList } from 'src/services/apis';
@@ -39,9 +39,11 @@ const LeftCard = () => {
       createTime:data?.createTime,
       pmsOrBill:data?.pmsOrBill
     }).then((res)=>{
-      console.log(res)
-      if(res?.data){
+      if(res.status===200){
+        message.success('删除成功')
         setIsVisible(false);
+      }else {
+        message.error(res?.message)
       }
     })
   },[])

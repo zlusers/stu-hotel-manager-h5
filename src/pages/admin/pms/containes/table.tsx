@@ -104,9 +104,21 @@ const PmSTable: React.FC<Props> = ({PmsData,payTypedata}) => {
         }
         return 0
     },[PmsData])
+    const  dataListMemo =useMemo(()=>{
+        if(PmsData&&PmsData.length>0){
+            return PmsData.map((item,index)=>{
+                return {
+                    ...item,
+                    key:index+1
+                }
+            })
+        }
+        return []
+
+    },[PmsData])
     return (
         <div>
-             <Table dataSource={PmsData} columns={columns}  size={'middle'}
+             <Table dataSource={dataListMemo} columns={columns}  size={'middle'}
               summary={() => {
                 return (
                     <Table.Summary fixed>

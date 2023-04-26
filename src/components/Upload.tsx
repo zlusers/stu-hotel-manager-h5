@@ -9,13 +9,14 @@ const Upload : React.FC<ModalProps> = ({
  const getFilds = () =>{
     const filedom = document.getElementById('file');
     filedom?.click()
+
   } 
 
   
     return (
       <>
       <div>
-        <input id="file" type="file" accept=".xls,.xlsx"
+        <input id="file" type="file" accept=".xls,.xlsx,.xltx,.html,.txt,.mht"
          	style={{ display:"none", }}
          	onChange={fileinputChange}
         />
