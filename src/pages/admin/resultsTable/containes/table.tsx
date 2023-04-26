@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {Table} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { getDateStr, getPayType } from 'src/utils/display';
@@ -15,8 +15,16 @@ interface Props {
 }
 const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) => {
     const [selectObj,setSelectObj]=useState<any[]>([])
-  
-   
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const start=useCallback(()=>{
+        setTimeout(() => {
+            setSelectObj([])
+            setSelectedRowKeys([])
+        }, 1000);
+    },[])
+    useEffect(()=>{
+        start()
+    },[dataList,start])
 
     const  dataListMemo =useMemo(()=>{
         if(dataList&&dataList.length>0){
@@ -207,11 +215,11 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
         }
     ];
     const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows:any[]) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        selectedRowKeys,
+        onChange: (newSelectedRowKeys: React.Key[], selectedRows:any[]) => {
           setSelectObj(selectedRows)
           onSeChange(selectedRows)
-
+          setSelectedRowKeys(newSelectedRowKeys);
         },
         getCheckboxProps: (record: any) => ({
           disabled: record.posStatus === 1, // Column configuration not to be checked
