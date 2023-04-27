@@ -101,7 +101,7 @@ const AddMadal: React.FC<ModalProps> = ({
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item name="payWay" label="支付方式"  rules={[{ required: true,message:'请选择支付方式'  }]}>
+                        <Form.Item name="payWay" label="支付方式" >
                             <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} defaultValue=''>
                                 {payTypedata?.map((item:API.PayWay) => (
                                 <Select.Option value={item.id} key={item.id}>

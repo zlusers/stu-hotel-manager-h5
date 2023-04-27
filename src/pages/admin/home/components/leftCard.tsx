@@ -17,7 +17,6 @@ const LeftCard = () => {
     queryNewPayWay({
       payWay:value
     }).then((res)=>{
-      console.log(res)
       if(res?.data){
         setOpen(false);
       }

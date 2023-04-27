@@ -39,13 +39,11 @@ interface Props {
 }
 const SearchFrom: React.FC<Props> = ({onAdd,data,payTypedata,onSearch}) => {
     const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
         const createTime = values['createTime'];
         const rangeTime = values['rangeTime'];
         let parDate =values
         parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
         parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
-        console.log('parDate: ',parDate);
         onSearch(parDate)
     };
     return (

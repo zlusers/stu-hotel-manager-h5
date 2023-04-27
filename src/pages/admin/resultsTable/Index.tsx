@@ -39,7 +39,7 @@ const Index: React.FC = () => {
     },[])
     const exportClick =useCallback(()=>{
         queryOutFile(searchData).then((res)=>{
-            console.log(res,'===res')
+            
             if(res.status===200){
                 getList()
                 message.success(res?.data)
@@ -50,7 +50,6 @@ const Index: React.FC = () => {
     },[searchData,getList])
 
     const outClick=useCallback(()=>{
-      console.log('点击核销')
       if(selectObj && selectObj.length>0){
         let bid = selectObj?.map(x => x.bId);
         let pid = selectObj?.map(x => x.pId);
@@ -60,7 +59,7 @@ const Index: React.FC = () => {
        let pids = pid?.filter(function (s) {
         return s && s.trim(); 
      });
-        queryUpdateOffRes({poStatus:2,bids:bids,pids:pids}).then((res)=>{
+        queryUpdateOffRes({poStatus:1,bids:bids,pids:pids}).then((res)=>{
             if(res.status===200){
                 message.success('核销成功')
                 getList()
@@ -72,6 +71,7 @@ const Index: React.FC = () => {
       
     },[selectObj,getList])
     const onCancel=useCallback((e:any)=>{
+    
       let bids =[e.bId] ;
       let pids =[e.pId] ;
       queryUpdateOffRes({poStatus:2,bids:bids,pids:pids}).then((res)=>{

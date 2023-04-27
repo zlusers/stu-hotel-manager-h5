@@ -208,7 +208,7 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
             render:(record: any) => (
                 record?.varianceAmount===0?'正常账单':
                 record?.poStatus===1?
-                <div onClick={(record:any)=>onCancel(record)} style={{color:"red"}}>撤销核销</div>:<div>未核销</div>
+                <div onClick={()=>onCancel(record)} style={{color:"red"}}>撤销核销</div>:<div>未核销</div>
 
             )
     

@@ -16,13 +16,11 @@ const DeleteMadal: React.FC<ModalProps> = ({
     const onFinish =useCallback(()=>{
         form.validateFields()
         .then((values) => {
-            console.log(values,'===values')
             const createTime = values['createTime'];
             const rangeTime = values['rangeTime'];
             let parDate =values
             parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
             parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
-            console.log('parDate: ',parDate);
             onOk(parDate)
         })
     },[form,onOk])

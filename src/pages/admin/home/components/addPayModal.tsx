@@ -20,7 +20,6 @@ const AddPayMadal: React.FC<ModalProps> = ({
     const onFinish =useCallback(()=>{
         form.validateFields()
         .then((values) => {
-            console.log(values,'===values')
             onOk(values?.payWay)
         })
     },[form,onOk])
