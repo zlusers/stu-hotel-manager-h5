@@ -54,7 +54,7 @@ const Index: React.FC = () => {
         let bid = selectObj?.map(x => x.bId);
         let pid = selectObj?.map(x => x.pId);
         let bids = bid?.filter(function (s) {
-          return s && s.trim(); 
+          return s && s.trim();
        });
        let pids = pid?.filter(function (s) {
         return s && s.trim(); 

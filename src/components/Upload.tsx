@@ -8,6 +8,8 @@ const Upload : React.FC<ModalProps> = ({
   // 触发选择文件模拟点击事件
  const getFilds = () =>{
     const filedom = document.getElementById('file');
+
+    console.log('---点击')
     filedom?.click()
 
   } 

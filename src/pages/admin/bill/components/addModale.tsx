@@ -32,14 +32,14 @@ const AddMadal: React.FC<ModalProps> = ({
     const onFinish = useCallback(() => {
         form.validateFields()
             .then((values) => {
-                let data =values
                 const rangeTime = values['rangeTime'];
-                data.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
+                let parDate =values
+                parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
                 if(fileList&&fileList.length>0){
-                    data.fileName=fileList.join(';');
-                    onOk(data)
+                    parDate.fileName=fileList.join(';');
+                    onOk(parDate)
                 }else {
-                    message.error( '清选择文件');
+                    message.error( '请选择文件');
                 }
 
             })
@@ -59,6 +59,13 @@ const AddMadal: React.FC<ModalProps> = ({
             list.push(e.target.files[0].name)
             setFileList(list)
         }
+        const file = e.target?.files[0];
+        const reader = new FileReader();
+        // FileReader.readAsDataURL(file)可以得到一段base64的字符串。
+        reader.readAsDataURL(file);
+        reader.onload = (loadFile) => {
+            e.target.value = '';
+        };
     },[fileList])
     const onDelete=useCallback((index:any)=>{
         let list =[...fileList]

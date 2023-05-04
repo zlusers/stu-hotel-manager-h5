@@ -49,8 +49,7 @@ const DeleteMadal: React.FC<ModalProps> = ({
                         style={{ maxWidth: 600 }}
                         preserve={false} 
                     >
-
-                        <Form.Item name="createTime" label="操作日期" rules={[{ required: true }]}>
+                        <Form.Item name="createTime" label="操作日期" >
                           <DatePicker />
                         </Form.Item>
                         <Form.Item name="rangeTime" label="所属区间" rules={[{ required: true }]}>

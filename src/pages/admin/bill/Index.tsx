@@ -22,6 +22,7 @@ const Index =() => {
       rangeTime:getDate(),
       createTime:'',
     });
+    const [isState, setIsState] = useState(true);
     const [PsmData,setPsmData]=useState<API.PmsItem[]>([])
 
 
@@ -36,9 +37,11 @@ const Index =() => {
    
     const openModal = () => {
       setIsVisible(true);
+      setIsState(true)
     };
     const cleanModal = () => {
       setIsVisible(false);
+      setIsState(true)
     };
     const onSearch=useCallback((data:{payWay:string,
       type:string,
@@ -47,17 +50,20 @@ const Index =() => {
         setSearchData(data)
     },[])
     const onAddTable=useCallback((data:API.Upload)=>{
-      querybillUpload(data).then((res)=>{
-        if(res.status===200){
-          message.success(res.message)
-          getList()
-          setIsVisible(false);
-
-        }else {
-          message.error(res.message)
-        }
-      })
-    },[getList])
+      if(isState){
+        setIsState(false)
+        querybillUpload(data).then((res)=>{
+          setIsState(true)
+          if(res.status===200){
+            message.success(res.message)
+            getList()
+            setIsVisible(false);
+          }else {
+            message.error(res.message)
+          }
+        })
+      }
+    },[getList,isState])
     return (
        <div>
         <SearchFrom onAdd={openModal} data={searchData} payTypedata={data} onSearch={onSearch}/>

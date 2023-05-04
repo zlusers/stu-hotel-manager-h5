@@ -54,7 +54,7 @@ const SearchFrom: React.FC<Props> = ({onAdd,payTypedata,onSearch}) => {
         >
             <Row gutter={24}>
                 <Col span={8}>
-                    <Form.Item name="payWay" label="支付类型" {...tailLayout}>
+                    <Form.Item name="type" label="支付类型" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             {Object.keys(PayType).map((item: string) => (
@@ -66,7 +66,7 @@ const SearchFrom: React.FC<Props> = ({onAdd,payTypedata,onSearch}) => {
                     </Form.Item>
                 </Col>
                 <Col span={8}>
-                    <Form.Item name="type" label="支付方式" {...tailLayout}>
+                    <Form.Item name="payWay" label="支付方式" {...tailLayout}>
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                             <Select.Option value="">全部</Select.Option>
                             {payTypedata?.map((item:API.PayWay) => (

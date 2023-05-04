@@ -24,7 +24,7 @@ const Index =() => {
     });
     const [PsmData,setPsmData]=useState<API.PmsItem[]>([])
 
-
+    const [isState, setIsState] = useState(true);
     const getList=useCallback(()=>{
       queryGetPmsList(searchData).then((res)=>{
         setPsmData(res)
@@ -37,24 +37,31 @@ const Index =() => {
 
     const openModal = () => {
       setIsVisible(true);
+      setIsState(true)
     };
     const cleanModal = () => {
       setIsVisible(false);
+      setIsState(true)
     };
     const onSearch=useCallback((data:API.Search)=>{
         setSearchData(data)
     },[])
     const onAddTable=useCallback((data:API.Upload)=>{
-      queryPmsUpload(data).then((res)=>{
-        if(res.status===200){
-          message.success(res.message)
-          setIsVisible(false);
-          getList()
-        }else {
-          message.error(res.message)
-        }
-      })
-    },[getList])
+      if(isState){
+        setIsState(false)
+        queryPmsUpload(data).then((res)=>{
+          setIsState(true)
+          if(res.status===200){
+            message.success(res.message)
+            setIsVisible(false);
+            getList()
+          }else {
+            message.error(res.message)
+          }
+        })
+      }
+     
+    },[getList,isState])
     return (
        <div>
         <SearchFrom onAdd={openModal}payTypedata={data} onSearch={onSearch} key={'pms'}/>

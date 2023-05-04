@@ -10,8 +10,6 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Upload from 'src/components/Upload'
 import cls from './addModale.module.scss'
 import { getDate1 } from 'src/utils/display';
-import moment from 'moment';
-
 /**
  * 
  * @returns  新增支付方式
@@ -33,13 +31,14 @@ const AddMadal: React.FC<ModalProps> = ({
     const onFinish = useCallback(() => {
         form.validateFields()
             .then((values) => {
-                let data =values
-                data.rangeTime=data.rangeTime?moment(data.rangeTime).format("YYYYMM"):''
+                const rangeTime = values['rangeTime'];
+                let parDate =values
+                parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
                 if(fileList&&fileList.length>0){
-                    data.fileName=fileList.join(';');
-                    onOk(data)
+                    parDate.fileName=fileList.join(';');
+                    onOk(parDate)
                 }else {
-                    message.error( '清选择文件');
+                    message.error( '请选择文件');
                 }
 
             })
@@ -59,6 +58,12 @@ const AddMadal: React.FC<ModalProps> = ({
             list.push(e.target.files[0].name)
             setFileList(list)
         }
+        const file = e.target?.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (loadFile) => {
+            e.target.value = '';
+        };
     },[fileList])
     const onDelete=useCallback((index:any)=>{
         let list =[...fileList]
