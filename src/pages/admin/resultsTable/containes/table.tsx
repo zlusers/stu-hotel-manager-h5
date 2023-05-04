@@ -222,8 +222,8 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
           setSelectedRowKeys(newSelectedRowKeys);
         },
         getCheckboxProps: (record: any) => ({
-          disabled: record.posStatus === 1, // Column configuration not to be checked
-          name: record.posStatus,
+          disabled: record.poStatus === 1, // Column configuration not to be checked
+          name: record.poStatus,
         }),
       };
     const seData=useMemo(()=>{
