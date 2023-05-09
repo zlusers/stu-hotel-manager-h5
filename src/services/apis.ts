@@ -38,7 +38,7 @@ export async function querygetPayTypeList({type}:{type:number|string}): Promise<
 	varianceMoney: number,
 	underseparationMoney: number
 }[]> {
-  return request.post(urls.getPayTypeList, {type:type===4?'':type})
+  return requestFormData(urls.getPayTypeList, {type:type===4?'':type})
   .then(defaultResultParse)
   .then((res)=>{return res.data
   });
