@@ -40,7 +40,8 @@ export async function querygetPayTypeList({type}:{type:number|string}): Promise<
 }[]> {
   return requestFormData(urls.getPayTypeList, {type:type===4?'':type})
   .then(defaultResultParse)
-  .then((res)=>{return res.data
+  .then((res)=>{
+    return res
   });
 }
 
@@ -61,8 +62,8 @@ export async function queryNewPayWay({payWay}:{payWay:string}): Promise<any> {
   .then((res)=>{return res});
 }
 
-export async function queryRemoveList({rangeTime,createTime,pmsOrBill}:{rangeTime:string,createTime:string,pmsOrBill:string}): Promise<any> {
-  return request.post(urls.removeList, {rangeTime,createTime,pmsOrBill})
+export async function queryRemoveList({rangeTime,createTime,pmsOrBill,type}:{rangeTime:string,createTime:string,pmsOrBill:string,type:number|string}): Promise<any> {
+  return request.post(urls.removeList, {rangeTime,createTime,pmsOrBill,type})
   .then(defaultResultParse)
   .then((res)=>{return res});
 }

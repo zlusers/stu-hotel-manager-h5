@@ -36,7 +36,8 @@ const LeftCard = () => {
     queryRemoveList({
       rangeTime:data?.rangeTime,
       createTime:data?.createTime,
-      pmsOrBill:data?.pmsOrBill
+      pmsOrBill:data?.pmsOrBill,
+      type:data?.type
     }).then((res)=>{
       if(res.status===200){
         message.success('删除成功')

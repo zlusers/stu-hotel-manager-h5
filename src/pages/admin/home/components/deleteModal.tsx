@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import {DatePicker, Form, Modal, Select } from 'antd';
+import { PayType } from 'src/utils/utils';
 /**
  * 
  * @returns  删除对账
@@ -54,6 +55,16 @@ const DeleteMadal: React.FC<ModalProps> = ({
                         </Form.Item>
                         <Form.Item name="rangeTime" label="所属区间" rules={[{ required: true }]}>
                           <DatePicker picker="month" />
+                        </Form.Item>
+                        <Form.Item name="type" label="支付类型">
+                            <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} >
+                                <Select.Option value="">全部</Select.Option>
+                                {Object.keys(PayType).map((item:string) => (
+                                <Select.Option value={item} key={item}>
+                                    {PayType[item]}
+                                </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                         <Form.Item name="pmsOrBill" label="报表类型" >
                         <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>

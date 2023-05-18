@@ -12,7 +12,6 @@ const TableView = () => {
     const {data} =UsePaywary()
     const [type,setType]=useState(4)
     const {data:homeData}=useQuerygetPayTypeList({type:Number(type)})
-   
     const  dataListMemo =useMemo(()=>{
         let data=homeData
         if(data&&data.length>0){
