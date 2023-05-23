@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
@@ -25,10 +25,11 @@ const tailLayout = {
 interface Props {
     payTypedata:API.PayWay[]|null;
     outClick:()=>void
-    exportClick?:()=>void
+    exportClick:(data:API.Isearch)=>void
     onSearch:(data:API.Isearch)=>void
 }
 const SearchFrom: React.FC<Props> = ({outClick,exportClick,payTypedata,onSearch}) => {
+    const [form] = Form.useForm();
     const onFinish = (values: any) => {
         const createTime = values['createTime'];
         const rangeTime = values['rangeTime'];
@@ -37,12 +38,29 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick,payTypedata,onSearch}
         parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
         onSearch(parDate)
     };
-   
-
+   const onExpo=useCallback(async()=>{
+    const values = await form.validateFields();
+    const createTime = values['createTime'];
+        const rangeTime = values['rangeTime'];
+        let parDate =values
+        parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
+        parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
+        exportClick(parDate)
+   },[])
+   const onSearchClick =useCallback(async()=>{
+    const values = await form.validateFields();
+    const createTime = values['createTime'];
+        const rangeTime = values['rangeTime'];
+        let parDate =values
+        parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
+        parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
+        onSearch(parDate)
+   },[])
     return (
         <Form
             {...layout}
             onFinish={onFinish}
+            form={form}
             labelCol={{ span: 12 }}
             wrapperCol={{ span: 12 }}
             layout="horizontal"
@@ -121,12 +139,12 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick,payTypedata,onSearch}
             </Row>
             <Row>
                 <Col span={24} style={{ textAlign: 'right' }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" onClick={onSearchClick}>
                         查询
                     </Button>
                     <Button
                         style={{ margin: '0 8px' }}
-                        onClick={exportClick}
+                        onClick={onExpo}
                     >
                         导出文件
                     </Button>

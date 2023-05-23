@@ -37,9 +37,8 @@ const Index: React.FC = () => {
     const onSearch=useCallback((data:API.Isearch)=>{
         setSearchData(data)
     },[])
-    const exportClick =useCallback(()=>{
-        queryOutFile(searchData).then((res)=>{
-            
+    const exportClick =useCallback((data:API.Isearch)=>{
+        queryOutFile(data).then((res)=>{
             if(res.status===200){
                 getList()
                 message.success(res?.data)
@@ -47,7 +46,7 @@ const Index: React.FC = () => {
                 message.error(res?.message)
               }
         })
-    },[searchData,getList])
+    },[getList])
 
     const outClick=useCallback(()=>{
       if(selectObj && selectObj.length>0){
@@ -86,7 +85,7 @@ const Index: React.FC = () => {
 
     return (
        <div>
-        <SearchFrom payTypedata={data} onSearch={onSearch} exportClick={()=>exportClick()} 
+        <SearchFrom payTypedata={data} onSearch={onSearch} exportClick={(data)=>exportClick(data)} 
          outClick={()=>outClick()}/>
         <TableTile title='对账结果数据列表' />
         <Table  dataList={dataList} payTypedata={data} onSeChange={(e)=>setSelectObj(e)} onCancel={(e)=>onCancel(e)}/>

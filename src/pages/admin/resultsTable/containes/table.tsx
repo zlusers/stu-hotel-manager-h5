@@ -249,10 +249,13 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
         let pPaymoneyAll = 0;
         let varianceAmountAll = 0;
         if(dataList&&dataList.length>0){
-            dataList.forEach(({bPaymoney, pPaymoney,varianceAmount }) => {
+            dataList.forEach(({bPaymoney, pPaymoney,varianceAmount,poStatus }) => {
                 bPaymoneyAll += Number(bPaymoney);
                 pPaymoneyAll += Number(pPaymoney);
-                varianceAmountAll += Number(varianceAmount);
+                if(poStatus!==1){
+                 varianceAmountAll += Number(varianceAmount);
+                }
+               
             });
             return {
                 bPaymoneyAll,pPaymoneyAll,varianceAmountAll

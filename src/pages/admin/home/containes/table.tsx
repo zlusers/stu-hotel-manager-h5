@@ -21,6 +21,7 @@ const TableView = () => {
                     key:index+1
                 }
             })
+           
             return list.filter((item)=>{
                 return item.underseparationMoney !==0 ||item.varianceMoney!==0
             })
@@ -28,7 +29,6 @@ const TableView = () => {
         return []
 
     },[homeData])
-
     const getPayType=(id:number)=>{
         if(data){
             return  data.filter((item)=>item?.id===id)[0]?.payWay

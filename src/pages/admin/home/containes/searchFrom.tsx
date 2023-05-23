@@ -20,11 +20,14 @@ const searchFrom: React.FC<Props> = ({onOk}) => {
             layout="horizontal"
             style={{ maxWidth: 600 }}
             onFinish={onFinish}
+            initialValues={{
+                type:'4',
+            }}
         >    <Row>
             <Col span={12}>
                 <Form.Item name="type"
                     label="支付类型">
-                    <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode} defaultValue='4'>
+                    <Select getPopupContainer={(triggerNode: any) => triggerNode.parentNode}>
                         <Select.Option value="4">全部</Select.Option>
                         {Object.keys(PayType).map((item:string) => (
                         <Select.Option value={item} key={item}>
