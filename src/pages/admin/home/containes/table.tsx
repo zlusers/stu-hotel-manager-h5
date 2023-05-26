@@ -1,17 +1,22 @@
-import React, { useCallback,useMemo,useState } from 'react';
+import React, { useCallback,useMemo} from 'react';
 import cls from './table.module.scss';
 import {Table } from 'antd';
 import SearchFrom from './searchFrom';
 import UsePaywary from 'src/hook/usePaywary';
-import {useQuerygetPayTypeList} from 'src/services/apis';
 /**
  * 
  * @returns  左边卡片
  */
-const TableView = () => {
+interface Props {
+    onSearchClick: (ret:any) => void;
+    homeData: {
+        payWay: number;
+        varianceMoney: number;
+        underseparationMoney: number;
+    }[] | undefined
+  }
+const TableView: React.FC<Props> = ({onSearchClick,homeData}) => {
     const {data} =UsePaywary()
-    const [type,setType]=useState(4)
-    const {data:homeData}=useQuerygetPayTypeList({type:Number(type)})
     const  dataListMemo =useMemo(()=>{
         let data=homeData
         if(data&&data.length>0){
@@ -58,8 +63,8 @@ const TableView = () => {
     ];
 
 const onSearch=useCallback((values:any)=>{
- setType(values?.type)
-},[])
+    onSearchClick(values?.type)
+},[onSearchClick])
     return (
         <div className={cls.page}>
             <SearchFrom  onOk={(values)=>onSearch(values)} />
@@ -70,15 +75,15 @@ const onSearch=useCallback((values:any)=>{
                         let totalRepayment = 0;
 
                         pageData.forEach(({ underseparationMoney, varianceMoney }) => {
-                            totalBorrow += varianceMoney;
-                            totalRepayment += underseparationMoney;
+                            totalBorrow += varianceMoney*100;
+                            totalRepayment += underseparationMoney*100;
                         });
                         return (
                             <Table.Summary fixed>
                                 <Table.Summary.Row>
                                     <Table.Summary.Cell index={0}><div style={{fontWeight:'bold'}}>合计</div></Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1}>{totalRepayment}</Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1}>{totalBorrow}</Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1}>{totalRepayment/100}</Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1}>{totalBorrow/100}</Table.Summary.Cell>
                                 </Table.Summary.Row>
                             </Table.Summary>
                         )

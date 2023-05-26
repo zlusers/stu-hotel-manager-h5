@@ -46,7 +46,7 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick,payTypedata,onSearch}
         parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
         parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
         exportClick(parDate)
-   },[])
+   },[exportClick,form])
    const onSearchClick =useCallback(async()=>{
     const values = await form.validateFields();
     const createTime = values['createTime'];
@@ -55,7 +55,7 @@ const SearchFrom: React.FC<Props> = ({outClick,exportClick,payTypedata,onSearch}
         parDate.rangeTime=rangeTime?rangeTime.format("YYYYMM"):''
         parDate.createTime=createTime?createTime.format("YYYYMMDD"):''
         onSearch(parDate)
-   },[])
+   },[onSearch,form])
     return (
         <Form
             {...layout}

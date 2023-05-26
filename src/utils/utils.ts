@@ -1,6 +1,6 @@
 export const PayType: { [key: string]: string }  = {
-    '1': '中介',
-    '2': '如家',
+    '2': '中介',
+    '1': '如家',
     '3': '华住',
   };
   export const PayMethod: { [key: string]: string }  = {

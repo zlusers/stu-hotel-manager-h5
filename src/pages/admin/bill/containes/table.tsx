@@ -92,7 +92,7 @@ const PmSTable: React.FC<Props> = ({PmsData,payTypedata}) => {
         if(PmsData){
             let totalBorrow = 0;
             PmsData.forEach(({ payMoney }) => {
-                totalBorrow += Number(payMoney);
+                totalBorrow += Number(payMoney)*100;
             });
             return totalBorrow
         }
@@ -110,7 +110,7 @@ const PmSTable: React.FC<Props> = ({PmsData,payTypedata}) => {
                             <Table.Summary.Cell index={1}></Table.Summary.Cell>
                             <Table.Summary.Cell index={2}></Table.Summary.Cell>
                             <Table.Summary.Cell index={3}></Table.Summary.Cell>
-                            <Table.Summary.Cell index={5} align={'center'}>{payMoney}</Table.Summary.Cell>
+                            <Table.Summary.Cell index={5} align={'center'}>{payMoney/100}</Table.Summary.Cell>
                             <Table.Summary.Cell index={6}></Table.Summary.Cell>
                             <Table.Summary.Cell index={7}></Table.Summary.Cell>
                         </Table.Summary.Row>

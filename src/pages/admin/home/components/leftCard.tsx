@@ -9,7 +9,10 @@ import { queryNewPayWay, queryRemoveList } from 'src/services/apis';
  * 
  * @returns  左边卡片
  */
-const LeftCard = () => {
+interface Props {
+  onDelete: () => void;
+}
+const LeftCard: React.FC<Props> = ({onDelete}) => {
     const [open, setOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -42,11 +45,12 @@ const LeftCard = () => {
       if(res.status===200){
         message.success('删除成功')
         setIsVisible(false);
+        onDelete()
       }else {
         message.error(res?.message)
       }
     })
-  },[])
+  },[onDelete])
     return (
     <>
      <div className={cls.leftCard}>

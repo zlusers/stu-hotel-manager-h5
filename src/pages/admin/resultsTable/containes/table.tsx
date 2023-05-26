@@ -206,7 +206,7 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
             fixed:'right',
             ellipsis:true,
             render:(record: any) => (
-                record?.varianceAmount===0?'正常账单':
+                record.bPaymoney===record.pPaymoney?'正常账单':
                 record?.poStatus===1?
                 <div onClick={()=>onCancel(record)} style={{color:"red"}}>撤销核销</div>:<div>未核销</div>
 
@@ -250,10 +250,10 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
         let varianceAmountAll = 0;
         if(dataList&&dataList.length>0){
             dataList.forEach(({bPaymoney, pPaymoney,varianceAmount,poStatus }) => {
-                bPaymoneyAll += Number(bPaymoney);
-                pPaymoneyAll += Number(pPaymoney);
+                bPaymoneyAll += Number(bPaymoney)*100;
+                pPaymoneyAll += Number(pPaymoney)*100;
                 if(poStatus!==1){
-                 varianceAmountAll += Number(varianceAmount);
+                 varianceAmountAll += Number(varianceAmount)*100;
                 }
                
             });
@@ -289,7 +289,7 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
                         <Table.Summary.Cell index={3}></Table.Summary.Cell>
                         <Table.Summary.Cell index={4}></Table.Summary.Cell>
                         <Table.Summary.Cell index={5}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={6} align={'center'}>{dataMemo?.pPaymoneyAll}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={6} align={'center'}>{dataMemo?.pPaymoneyAll/100}</Table.Summary.Cell>
                         <Table.Summary.Cell index={7}></Table.Summary.Cell>
                         <Table.Summary.Cell index={8}></Table.Summary.Cell>
                         <Table.Summary.Cell index={9}></Table.Summary.Cell>
@@ -297,10 +297,10 @@ const TableList: React.FC<Props> = ({dataList,payTypedata,onSeChange,onCancel}) 
                         <Table.Summary.Cell index={11}></Table.Summary.Cell>
                         <Table.Summary.Cell index={12}></Table.Summary.Cell>
                         <Table.Summary.Cell index={13}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={14} align={'center'}>{dataMemo?.bPaymoneyAll}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={14} align={'center'}>{dataMemo?.bPaymoneyAll/100}</Table.Summary.Cell>
                         <Table.Summary.Cell index={15}></Table.Summary.Cell>
                         <Table.Summary.Cell index={16}></Table.Summary.Cell>
-                        <Table.Summary.Cell align={'center'} index={17}>{dataMemo?.varianceAmountAll}</Table.Summary.Cell>
+                        <Table.Summary.Cell align={'center'} index={17}>{dataMemo?.varianceAmountAll/100}</Table.Summary.Cell>
                         <Table.Summary.Cell index={18}></Table.Summary.Cell>
                     </Table.Summary.Row>
                 </Table.Summary>
