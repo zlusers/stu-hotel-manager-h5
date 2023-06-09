@@ -36,8 +36,9 @@ interface Props {
         type:string,
         rangeTime:string,
         createTime:string,}) => void;
+    onLook:()=>void;
 }
-const SearchFrom: React.FC<Props> = ({onAdd,data,payTypedata,onSearch}) => {
+const SearchFrom: React.FC<Props> = ({onAdd,data,payTypedata,onSearch,onLook}) => {
     const onFinish = (values: any) => {
         const createTime = values['createTime'];
         const rangeTime = values['rangeTime'];
@@ -108,6 +109,12 @@ const SearchFrom: React.FC<Props> = ({onAdd,data,payTypedata,onSearch}) => {
                         onClick={onAdd}
                     >
                       上传文件
+                    </Button>
+                    <Button
+                        style={{ margin: '0 8px' }}
+                        onClick={onLook}
+                    >
+                      已上传文件
                     </Button>
                 </Col>
             </Row>

@@ -28,8 +28,9 @@ interface Props {
     onAdd: () => void;
     payTypedata:API.PayWay[]|null;
     onSearch:(data:API.Search) => void;
+    onLook: () => void;
 }
-const SearchFrom: React.FC<Props> = ({onAdd,payTypedata,onSearch}) => {
+const SearchFrom: React.FC<Props> = ({onAdd,payTypedata,onSearch,onLook}) => {
     const onFinish = (values: any) => {
         const createTime = values['createTime'];
         const rangeTime = values['rangeTime'];
@@ -101,6 +102,12 @@ const SearchFrom: React.FC<Props> = ({onAdd,payTypedata,onSearch}) => {
                         onClick={onAdd}
                     >
                       上传文件
+                    </Button>
+                    <Button
+                        style={{ margin: '0 8px' }}
+                        onClick={onLook}
+                    >
+                      已上传文件
                     </Button>
                 </Col>
             </Row>
